@@ -10,7 +10,6 @@ import LocalAuthentication
 
 public protocol PasswordInputCompleteProtocol: class {
     func passwordInputComplete(_ passwordContainerView: PasswordContainerView, input: String)
-    func touchAuthenticationComplete(_ passwordContainerView: PasswordContainerView, success: Bool, error: Error?)
 }
 
 open class PasswordContainerView: UIView {
@@ -27,6 +26,8 @@ open class PasswordContainerView: UIView {
             deleteButton.setTitle(NSLocalizedString(deleteButtonLocalizedTitle, comment: ""), for: .normal)
         }
     }
+    
+    var action: (() -> Void)?
     
     open weak var delegate: PasswordInputCompleteProtocol?
     fileprivate var touchIDContext = LAContext()
@@ -107,7 +108,7 @@ open class PasswordContainerView: UIView {
     open func rearrangeForVisualEffectView(in vc: UIViewController) {
         self.isVibrancyEffect = true
         self.passwordInputViews.forEach { passwordInputView in
-            let label = passwordInputView.label
+            let label = passwordInputView.labelNumber
             label.removeFromSuperview()
             vc.view.addSubview(label)
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -157,9 +158,9 @@ open class PasswordContainerView: UIView {
     
     //MARK: Input Wrong
     open func wrongPassword() {
-        passwordDotView.shakeAnimationWithCompletion {
-            self.clearInput()
-        }
+//        passwordDotView.shakeAnimationWithCompletion {
+//            self.clearInput()
+//        }
     }
     
     open func clearInput() {
@@ -182,26 +183,27 @@ open class PasswordContainerView: UIView {
     }
     
     @IBAction func touchAuthenticationAction(_ sender: UIButton) {
-        touchAuthentication()
+        action?()
+//        touchAuthentication()
     }
     
-    open func touchAuthentication() {
-        guard isTouchAuthenticationAvailable else { return }
-        touchIDContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: touchAuthenticationReason) { (success, error) in
-            DispatchQueue.main.async {
-                if success {
-                    self.passwordDotView.inputDotCount = self.passwordDotView.totalDotCount
-                    // instantiate LAContext again for avoiding the situation that PasswordContainerView stay in memory when authenticate successfully
-                    self.touchIDContext = LAContext()
-                }
-                
-                // delay delegate callback for the user can see passwordDotView input dots filled animation
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.delegate?.touchAuthenticationComplete(self, success: success, error: error)
-                }
-            }
-        }
-    }
+//    open func touchAuthentication() {
+//        guard isTouchAuthenticationAvailable else { return }
+//        touchIDContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: touchAuthenticationReason) { (success, error) in
+//            DispatchQueue.main.async {
+//                if success {
+//                    self.passwordDotView.inputDotCount = self.passwordDotView.totalDotCount
+//                    // instantiate LAContext again for avoiding the situation that PasswordContainerView stay in memory when authenticate successfully
+//                    self.touchIDContext = LAContext()
+//                }
+//
+//                // delay delegate callback for the user can see passwordDotView input dots filled animation
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//                    self.delegate?.touchAuthenticationComplete(self, success: success, error: error)
+//                }
+//            }
+//        }
+//    }
 }
 
 private extension PasswordContainerView {

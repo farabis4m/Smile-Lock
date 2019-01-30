@@ -19,9 +19,10 @@ open class PasswordInputView: UIView {
     
     let circleView = UIView()
     let button = UIButton()
-    public let label = UILabel()
+    public let labelNumber = UILabel()
+    public let labelAlphabet = UILabel()
     open var labelFont: UIFont?
-    fileprivate let fontSizeRatio: CGFloat = 46 / 40
+    fileprivate let fontSizeRatio: CGFloat = 0.89
     fileprivate let borderWidthRatio: CGFloat = 1 / 26
     fileprivate var touchUpFlag = true
     fileprivate(set) open var isAnimating = false
@@ -30,7 +31,14 @@ open class PasswordInputView: UIView {
     @IBInspectable
     open var numberString = "2" {
         didSet {
-            label.text = numberString
+            labelNumber.text = numberString
+        }
+    }
+    
+    @IBInspectable
+    open var alphabet = "" {
+        didSet {
+            labelAlphabet.text = numberString
         }
     }
     
@@ -51,7 +59,8 @@ open class PasswordInputView: UIView {
     @IBInspectable
     open var textColor = UIColor.darkGray {
         didSet {
-            label.textColor = textColor
+            labelNumber.textColor = textColor
+            labelAlphabet.textColor = textColor
         }
     }
     
@@ -109,6 +118,14 @@ open class PasswordInputView: UIView {
                                  weight: touchUpFlag ? UIFont.Weight.thin : UIFont.Weight.regular)
     }
     
+    fileprivate func getLabelAlphabetFont() -> UIFont {
+        if labelFont != nil {
+            return labelFont!
+        }
+        
+        return UIFont.systemFont(ofSize: 9.5, weight: touchUpFlag ? UIFont.Weight.thin :UIFont.Weight.regular)
+    }
+    
     fileprivate func updateUI() {
         //prepare calculate
         let width = bounds.width
@@ -118,12 +135,15 @@ open class PasswordInputView: UIView {
         let borderWidth = radius * borderWidthRatio
         let circleRadius = radius - borderWidth
         
-        //update label
-        label.text = numberString
+        //update labelNumber
+        labelNumber.text = numberString
+        labelAlphabet.text = alphabet
         
-        label.font = getLabelFont()
+        labelNumber.font = getLabelFont()
+        labelAlphabet.font = getLabelAlphabetFont()
         
-        label.textColor = textColor
+        labelNumber.textColor = textColor
+        labelAlphabet.textColor = textColor
         
         //update circle view
         circleView.frame = CGRect(x: 0, y: 0, width: 2 * circleRadius, height: 2 * circleRadius)
@@ -149,10 +169,18 @@ private extension PasswordInputView {
     func configureSubviews() {
         addSubview(circleView)
 
-        //configure label
-        NSLayoutConstraint.addEqualConstraintsFromSubView(label, toSuperView: self)
-        label.textAlignment = .center
-        label.isAccessibilityElement = false
+        //configure labelNumber
+        NSLayoutConstraint.addEqualConstraintsFromSubView(labelNumber, toSuperView: self)
+
+        addSubview(labelAlphabet)
+        labelAlphabet.fillInSuperView(top: 54, bottom: 14, leading: 23, trailing: 20)
+
+        
+        labelNumber.textAlignment = .center
+        labelAlphabet.textAlignment = .center
+        
+        labelNumber.isAccessibilityElement = false
+        labelAlphabet.isAccessibilityElement = false
         
         //configure button
         NSLayoutConstraint.addEqualConstraintsFromSubView(button, toSuperView: self)
@@ -164,8 +192,12 @@ private extension PasswordInputView {
     
     //MARK: Animation
     func touchDownAction() {
-        label.font = getLabelFont()
-        label.textColor = highlightTextColor
+        labelNumber.font = getLabelFont()
+        labelNumber.textColor = highlightTextColor
+        
+        labelAlphabet.font = getLabelFont()
+        labelAlphabet.textColor = highlightTextColor
+        
         if !self.isVibrancyEffect {
             backgroundColor = highlightBackgroundColor
         }
@@ -173,8 +205,10 @@ private extension PasswordInputView {
     }
     
     func touchUpAction() {
-        label.font = getLabelFont()
-        label.textColor = textColor
+        labelNumber.font = getLabelFont()
+        labelAlphabet.font = getLabelAlphabetFont()
+        labelNumber.textColor = textColor
+        labelAlphabet.textColor = textColor
         backgroundColor = borderColor
         circleView.backgroundColor = circleBackgroundColor
     }
@@ -228,5 +262,19 @@ internal extension NSLayoutConstraint {
         superView.addSubview(subview)
         subview.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.addConstraints(fromView: subview, toView: superView, constraintInsets: insets)
+    }
+}
+
+
+extension UIView {
+    func fillInSuperView(top: CGFloat = 0.0, bottom: CGFloat = 0.0, leading: CGFloat = 0.0, trailing: CGFloat = 0.0) {
+        
+        // add basic layout constraints for the view
+        guard let superview = superview else { return }
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        superview.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(leading)-[view]-\(trailing)-|", options: [], metrics: nil, views: ["view": self]))
+        superview.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-\(top)-[view]-\(bottom)-|", options: [], metrics: nil, views: ["view": self]))
     }
 }

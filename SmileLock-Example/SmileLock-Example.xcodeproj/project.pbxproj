@@ -236,7 +236,9 @@
 				TargetAttributes = {
 					B7E3A1A91CCC6448005F680E = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = J274N44KNJ;
 						LastSwiftMigration = 1010;
+						ProvisioningStyle = Manual;
 					};
 					B7E3A1BD1CCC6449005F680E = {
 						CreatedOnToolsVersion = 7.3;
@@ -518,11 +520,14 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = J274N44KNJ;
 				INFOPLIST_FILE = "SmileLock-Example/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.self.SmileLock-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "com.s4m.*";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
@@ -533,11 +538,14 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = J274N44KNJ;
 				INFOPLIST_FILE = "SmileLock-Example/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.self.SmileLock-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "com.s4m.*";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
