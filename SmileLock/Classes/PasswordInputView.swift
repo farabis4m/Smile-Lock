@@ -43,21 +43,21 @@ open class PasswordInputView: UIView {
     }
     
     @IBInspectable
-    open var borderColor = UIColor.darkGray {
+    open var borderColor = UIColor.clear {
         didSet {
             backgroundColor = borderColor
         }
     }
     
     @IBInspectable
-    open var circleBackgroundColor = UIColor.white {
+    open var circleBackgroundColor = UIColor.clear {
         didSet {
             circleView.backgroundColor = circleBackgroundColor
         }
     }
     
     @IBInspectable
-    open var textColor = UIColor.darkGray {
+    open var textColor = UIColor.white {
         didSet {
             labelNumber.textColor = textColor
             labelAlphabet.textColor = textColor
@@ -65,7 +65,7 @@ open class PasswordInputView: UIView {
     }
     
     @IBInspectable
-    open var highlightBackgroundColor = UIColor.red
+    open var highlightBackgroundColor = UIColor(red: 58/255, green: 162/255, blue: 221/255, alpha: 1)
     
     @IBInspectable
     open var highlightTextColor = UIColor.white
@@ -78,6 +78,8 @@ open class PasswordInputView: UIView {
     #else
     override open func awakeFromNib() {
         super.awakeFromNib()
+        
+        
         configureSubviews()
     }
     #endif
@@ -161,6 +163,8 @@ open class PasswordInputView: UIView {
         
         //update color
         backgroundColor = borderColor
+        button.layer.cornerRadius = button.frame.height / 2
+        button.layer.borderWidth = 1
     }
 }
 
@@ -183,7 +187,11 @@ private extension PasswordInputView {
         labelAlphabet.isAccessibilityElement = false
         
         //configure button
-        NSLayoutConstraint.addEqualConstraintsFromSubView(button, toSuperView: self)
+//        NSLayoutConstraint.addEqualConstraintsFromSubView(button, toSuperView: self)
+        addSubview(button)
+        button.fillInSuperView()
+        
+        button.layer.borderColor = UIColor.white.cgColor
         button.isExclusiveTouch = true
         button.addTarget(self, action: #selector(PasswordInputView.touchDown), for: [.touchDown])
         button.addTarget(self, action: #selector(PasswordInputView.touchUp), for: [.touchUpInside, .touchDragOutside, .touchCancel, .touchDragExit])
@@ -192,11 +200,11 @@ private extension PasswordInputView {
     
     //MARK: Animation
     func touchDownAction() {
-        labelNumber.font = getLabelFont()
-        labelNumber.textColor = highlightTextColor
+        //labelNumber.font = getLabelFont()
+        //labelNumber.textColor = highlightTextColor
         
-        labelAlphabet.font = getLabelFont()
-        labelAlphabet.textColor = highlightTextColor
+        //labelAlphabet.font = getLabelFont()
+        //labelAlphabet.textColor = highlightTextColor
         
         if !self.isVibrancyEffect {
             backgroundColor = highlightBackgroundColor

@@ -21,7 +21,10 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func presentLoginVC(_ sender: AnyObject) {
-        present(loginVCID)
+        // get alert view controller
+        guard let controller = UIStoryboard(name: "PasswordLogin", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as? ViewController else { return }
+        present(controller, animated: true, completion: nil)
+//        present(loginVCID)
     }
     
     func present(_ id: String) {

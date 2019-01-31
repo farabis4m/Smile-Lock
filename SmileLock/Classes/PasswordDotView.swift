@@ -28,14 +28,14 @@ open class PasswordDotView: UIView {
     }
     
     @IBInspectable
-    open var strokeColor = UIColor.darkGray {
+    open var strokeColor = UIColor.white {
         didSet {
             setNeedsDisplay()
         }
     }
     
     @IBInspectable
-    open var fillColor = UIColor.red {
+    open var fillColor = UIColor.white {
         didSet {
             setNeedsDisplay()
         }
